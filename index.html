@@ -3,19 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RGB Tech | Геймърски Конфигурации</title>
+    <title>RGB Tech | Ultimate Gaming Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .dropdown:hover .dropdown-menu { display: block; }
         .btn-gaming {
             background: linear-gradient(90deg, #8b5cf6, #3b82f6);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
         }
         .btn-gaming:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.4);
         }
-        .modal { transition: opacity 0.25s ease; }
+        .gaming-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            transition: all 0.3s ease;
+        }
+        .gaming-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-5px);
+        }
+        @keyframes rgb-text {
+            0% { color: #8b5cf6; }
+            50% { color: #3b82f6; }
+            100% { color: #8b5cf6; }
+        }
+        .logo-anim { animation: rgb-text 3s infinite; }
+        .hidden { display: none; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
@@ -24,15 +39,16 @@
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
                 <div class="flex space-x-7">
-                    <a href="#" onclick="showPage('home')" class="text-2xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
+                    <a href="#" onclick="showPage('home')" class="text-2xl font-black tracking-tighter logo-anim">
                         RGB TECH
                     </a>
                     <div class="hidden md:flex items-center space-x-4">
                         <div class="relative dropdown">
-                            <button class="py-4 px-2 text-gray-300 font-semibold hover:text-purple-400 transition">Конфигурации ▼</button>
-                            <ul class="dropdown-menu absolute hidden text-gray-100 pt-1 bg-gray-800 border border-gray-700 shadow-xl rounded-lg w-48">
-                                <li><a class="hover:bg-gray-700 py-2 px-4 block" href="#" onclick="filterCategory('Budget')">Бюджетни (1080p)</a></li>
-                                <li><a class="hover:bg-gray-700 py-2 px-4 block" href="#" onclick="filterCategory('High-End')">High-End (4K)</a></li>
+                            <button class="py-4 px-2 text-gray-300 font-semibold hover:text-purple-400 transition">Категории ▼</button>
+                            <ul class="dropdown-menu absolute hidden text-gray-100 pt-1 bg-gray-800 border border-gray-700 shadow-xl rounded-lg w-56">
+                                <li><a class="hover:bg-gray-700 py-2 px-4 block" href="#" onclick="filterCategory('Budget')">Бюджетни (Entry Level)</a></li>
+                                <li><a class="hover:bg-gray-700 py-2 px-4 block" href="#" onclick="filterCategory('Mid-Range')">Балансирани (1440p)</a></li>
+                                <li><a class="hover:bg-gray-700 py-2 px-4 block" href="#" onclick="filterCategory('High-End')">Ентусиасти (4K/Pro)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -41,8 +57,8 @@
                     <div id="user-section">
                         <button onclick="toggleModal('login-modal')" class="text-gray-300 hover:text-white font-bold px-4">Вход</button>
                     </div>
-                    <button onclick="showPage('cart')" class="py-2 px-4 btn-gaming text-white rounded-full font-bold">
-                        🛒 Количка (<span id="cart-count">0</span>)
+                    <button onclick="showPage('cart')" class="py-2 px-4 btn-gaming text-white rounded-full font-bold shadow-lg">
+                        🛒 (<span id="cart-count">0</span>)
                     </button>
                 </div>
             </div>
@@ -50,139 +66,260 @@
     </nav>
 
     <main class="max-w-6xl mx-auto mt-10 px-4 mb-20">
+        
         <div id="home-page">
-            <h2 id="category-title" class="text-3xl font-bold border-l-4 border-purple-500 pl-4 mb-8">Всички Машини</h2>
-            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+            <div class="mb-8">
+                <h2 id="category-title" class="text-4xl font-black uppercase tracking-tight">Всички Машини</h2>
+                <p class="text-gray-400 mt-2">Избери своята бойна станция и доминирай на бойното поле.</p>
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </div>
+
+        <div id="product-details-page" class="hidden">
+            <button onclick="showPage('home')" class="mb-6 text-purple-400 hover:text-white flex items-center transition">
+                ← Обратно към каталога
+            </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-gray-800 p-8 rounded-3xl border border-gray-700 shadow-2xl">
+                <div class="overflow-hidden rounded-2xl border border-gray-700">
+                    <img id="detail-img" src="" class="w-full h-auto object-cover">
+                </div>
+                <div>
+                    <span id="detail-category" class="text-blue-400 font-bold uppercase tracking-widest text-sm"></span>
+                    <h2 id="detail-name" class="text-4xl font-black mb-4 mt-2"></h2>
+                    <p id="detail-price" class="text-3xl font-bold text-white mb-6"></p>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-bold border-b border-gray-700 pb-2 mb-3 text-purple-400">Спецификации</h3>
+                            <ul id="detail-specs-list" class="space-y-2 text-gray-300 font-mono text-sm"></ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold border-b border-gray-700 pb-2 mb-3 text-purple-400">Описание</h3>
+                            <p id="detail-description" class="text-gray-400 leading-relaxed"></p>
+                        </div>
+                        <button id="add-to-cart-detail" class="btn-gaming w-full py-4 rounded-xl font-black uppercase text-xl shadow-xl">
+                            Добави в Количката
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="cart-page" class="hidden">
-            <h2 class="text-3xl font-bold mb-8 text-center">Вашият Арсенал</h2>
-            <div id="cart-items" class="bg-gray-800 border border-gray-700 p-6 rounded-2xl mb-4"></div>
-            <div class="text-right">
-                <p class="text-2xl font-bold mb-4 text-purple-400">Общо: <span id="cart-total">0.00</span> лв.</p>
-                <button onclick="showPage('checkout')" class="btn-gaming text-white px-10 py-4 rounded-full font-black uppercase tracking-widest">Към Чекаут</button>
+            <h2 class="text-3xl font-bold mb-8 uppercase">Твоят Арсенал</h2>
+            <div id="cart-items" class="gaming-card p-6 rounded-2xl mb-6 shadow-xl"></div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <button onclick="showPage('home')" class="text-gray-400 hover:text-white underline">Продължи да пазаруваш</button>
+                <div class="text-right">
+                    <p class="text-3xl font-bold text-purple-400 mb-4">ОБЩО: <span id="cart-total">0.00</span> лв.</p>
+                    <button onclick="showPage('checkout')" class="btn-gaming px-12 py-4 rounded-xl font-black uppercase tracking-widest">Към Чекаут</button>
+                </div>
             </div>
         </div>
 
-        <div id="checkout-page" class="hidden">
-            <h2 class="text-3xl font-bold mb-8">Завършване на поръчката</h2>
-            <div class="bg-gray-800 border border-gray-700 p-8 rounded-2xl max-w-2xl mx-auto">
-                <form onsubmit="event.preventDefault(); alert('Поръчката е приета!');">
-                    <div class="mb-4">
-                        <label class="block text-gray-400 mb-2">Адрес за доставка</label>
-                        <input type="text" class="w-full bg-gray-900 border border-gray-600 p-3 rounded" required>
-                    </div>
-                    <button type="submit" class="w-full btn-gaming py-4 rounded-xl font-bold uppercase">Потвърди</button>
-                </form>
-            </div>
+        <div id="checkout-page" class="hidden max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold mb-8 text-center uppercase">Данни за Доставка</h2>
+            <form onsubmit="event.preventDefault(); alert('Мисията е успешна! Поръчката е приета.'); location.reload();" class="gaming-card p-8 rounded-2xl shadow-2xl">
+                <div class="space-y-4">
+                    <input type="text" placeholder="Име и Фамилия" class="w-full bg-gray-900 border border-gray-700 p-4 rounded-lg focus:border-purple-500 outline-none text-white" required>
+                    <input type="text" placeholder="Адрес за доставка" class="w-full bg-gray-900 border border-gray-700 p-4 rounded-lg focus:border-purple-500 outline-none text-white" required>
+                    <input type="tel" placeholder="Телефонен номер" class="w-full bg-gray-900 border border-gray-700 p-4 rounded-lg focus:border-purple-500 outline-none text-white" required>
+                </div>
+                <button type="submit" class="w-full btn-gaming mt-8 py-4 rounded-xl font-black uppercase shadow-xl">Потвърди Поръчката</button>
+            </form>
         </div>
     </main>
 
-    <div id="login-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 px-4">
+    <div id="login-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md px-4">
         <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700 w-full max-w-md relative">
-            <button onclick="toggleModal('login-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-white">✕</button>
-            
+            <button onclick="toggleModal('login-modal')" class="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl">✕</button>
             <div id="login-form">
-                <h3 class="text-2xl font-bold mb-6 text-center text-purple-400">Влез в акаунта си</h3>
-                <input id="login-email" type="email" placeholder="Имейл" class="w-full bg-gray-900 border border-gray-600 p-3 rounded mb-4 focus:border-purple-500 outline-none">
-                <input type="password" placeholder="Парола" class="w-full bg-gray-900 border border-gray-600 p-3 rounded mb-6 focus:border-purple-500 outline-none">
-                <button onclick="login()" class="w-full btn-gaming py-3 rounded-lg font-bold mb-4">ВХОД</button>
-                <p class="text-center text-sm text-gray-400">Нямаш акаунт? <a href="#" onclick="toggleAuthForm()" class="text-blue-400 underline">Регистрирай се</a></p>
+                <h3 class="text-2xl font-bold mb-6 text-center text-blue-400 uppercase tracking-tighter">Влез в Системата</h3>
+                <input type="email" placeholder="Имейл" class="w-full bg-gray-900 border border-gray-700 p-3 rounded mb-4 outline-none focus:border-blue-500 text-white">
+                <input type="password" placeholder="Парола" class="w-full bg-gray-900 border border-gray-700 p-3 rounded mb-6 outline-none focus:border-blue-500 text-white">
+                <button onclick="login()" class="w-full btn-gaming py-3 rounded-lg font-bold">ВХОД</button>
+                <p class="text-center mt-4 text-sm text-gray-400">Нямаш акаунт? <a href="#" onclick="toggleAuthForm()" class="text-purple-400 underline">Регистрирай се</a></p>
             </div>
-
             <div id="register-form" class="hidden">
-                <h3 class="text-2xl font-bold mb-6 text-center text-blue-400">Регистрация</h3>
-                <input id="reg-name" type="text" placeholder="Име / Username" class="w-full bg-gray-900 border border-gray-600 p-3 rounded mb-4 focus:border-blue-500 outline-none">
-                <input type="email" placeholder="Имейл / Email" class="w-full bg-gray-900 border border-gray-600 p-3 rounded mb-4 focus:border-blue-500 outline-none">
-                <input type="password" placeholder="Парола / Password" class="w-full bg-gray-900 border border-gray-600 p-3 rounded mb-6 focus:border-blue-500 outline-none">
-                <button onclick="login('reg')" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-bold mb-4">СЪЗДАЙ АКАУНТ</button>
-                <p class="text-center text-sm text-gray-400">Вече имаш акаунт? <a href="#" onclick="toggleAuthForm()" class="text-purple-400 underline">Влез тук</a></p>
+                <h3 class="text-2xl font-bold mb-6 text-center text-purple-400 uppercase tracking-tighter">Регистрация на Играч</h3>
+                <input id="reg-name" type="text" placeholder="Геймърски таг / Име" class="w-full bg-gray-900 border border-gray-700 p-3 rounded mb-4 outline-none focus:border-purple-500 text-white">
+                <input type="email" placeholder="Имейл" class="w-full bg-gray-900 border border-gray-700 p-3 rounded mb-4 outline-none focus:border-purple-500 text-white">
+                <input type="password" placeholder="Парола" class="w-full bg-gray-900 border border-gray-700 p-3 rounded mb-6 outline-none focus:border-purple-500 text-white">
+                <button onclick="login('reg')" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-bold transition">СЪЗДАЙ ПРОФИЛ</button>
+                <p class="text-center mt-4 text-sm text-gray-400">Вече имаш профил? <a href="#" onclick="toggleAuthForm()" class="text-blue-400 underline">Влез тук</a></p>
             </div>
         </div>
     </div>
 
     <script>
         const products = [
-            { id: 1, name: "Stormbringer v1", spec: "RTX 3060, Ryzen 5", price: 1650, category: "Budget", img: "https://images.unsplash.com/photo-1587202377405-83d97a9d5ec9?w=400" },
-            { id: 2, name: "Neon Overlord", spec: "RTX 4080, i9-13900K", price: 4200, category: "High-End", img: "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=400" },
-            { id: 3, name: "Ultimate Beast", spec: "RTX 4090, Liquid Cooled", price: 7800, category: "High-End", img: "https://images.unsplash.com/photo-1552831388-68893ecbb324?w=400" }
+            { 
+                id: 1, name: "Starter Ghost", price: 950, category: "Budget", 
+                img: "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=800",
+                spec: "GTX 1650, i3-12100F",
+                fullSpecs: ["CPU: Intel Core i3-12100F", "GPU: NVIDIA GTX 1650 4GB", "RAM: 8GB DDR4 3200MHz", "SSD: 500GB NVMe", "PSU: 500W 80+ Bronze"],
+                description: "Идеалната машина за начало. Подходяща за 1080p гейминг на игри като CS2, Valorant и Minecraft."
+            },
+            { 
+                id: 2, name: "Pixel Warrior", price: 1250, category: "Budget", 
+                img: "https://images.unsplash.com/photo-1587202377405-83d97a9d5ec9?w=800",
+                spec: "RX 6600, Ryzen 5 5500",
+                fullSpecs: ["CPU: AMD Ryzen 5 5500", "GPU: AMD Radeon RX 6600 8GB", "RAM: 16GB DDR4", "SSD: 1TB NVMe", "Case: RGB Flow"],
+                description: "Бюджетно чудовище, което не прави компромис с производителността в модерните заглавия."
+            },
+            { 
+                id: 3, name: "Shadow Striker", price: 2100, category: "Mid-Range", 
+                img: "https://images.unsplash.com/photo-1625842268584-8f3bf9ff16a1?w=800",
+                spec: "RTX 4060 Ti, Ryzen 5 7600X",
+                fullSpecs: ["CPU: AMD Ryzen 5 7600X", "GPU: NVIDIA RTX 4060 Ti 8GB", "RAM: 32GB DDR5 5600MHz", "SSD: 1TB Gen4", "Cooling: Air Cooler RGB"],
+                description: "Балансирана мощ за 1440p гейминг. Перфектен за стрийминг и конкурентна игра."
+            },
+            { 
+                id: 4, name: "Neon Pulse", price: 2850, category: "Mid-Range", 
+                img: "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?w=800",
+                spec: "RTX 4070, i5-13600K",
+                fullSpecs: ["CPU: Intel Core i5-13600K", "GPU: NVIDIA RTX 4070 12GB", "RAM: 32GB DDR5", "SSD: 1TB Samsung", "Cooling: 240mm AIO"],
+                description: "Високоскоростна машина с DLSS 3.5 поддръжка за максимални детайли във всяка игра."
+            },
+            { 
+                id: 5, name: "Titan X-Pro", price: 5400, category: "High-End", 
+                img: "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800",
+                spec: "RTX 4080 Super, i9-14900K",
+                fullSpecs: ["CPU: Intel Core i9-14900K", "GPU: NVIDIA RTX 4080 Super 16GB", "RAM: 64GB DDR5 6000MHz", "SSD: 2TB NVMe Gen4", "Cooling: 360mm Liquid"],
+                description: "Безкомпромисен 4K гейминг. Създаден за ентусиасти и професионални създатели на съдържание."
+            },
+            { 
+                id: 6, name: "Cyber God", price: 9200, category: "High-End", 
+                img: "https://images.unsplash.com/photo-1547082299-de196ea013d6?w=800",
+                spec: "RTX 4090, Liquid Cooled",
+                fullSpecs: ["CPU: AMD Ryzen 9 7950X3D", "GPU: NVIDIA RTX 4090 24GB", "RAM: 128GB DDR5", "SSD: 4TB Raid 0", "Cooling: Custom Loop"],
+                description: "Най-мощната конфигурация на пазара. Нищо не може да спре това технологично произведение на изкуството."
+            }
         ];
 
         let cart = [];
         let currentUser = localStorage.getItem('user');
 
-        // Инициализация на потребител
         if (currentUser) updateNavWithUser(currentUser);
-
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('hidden');
-        }
-
-        function toggleAuthForm() {
-            document.getElementById('login-form').classList.toggle('hidden');
-            document.getElementById('register-form').classList.toggle('hidden');
-        }
-
-        function login(type = 'login') {
-            const name = type === 'reg' ? document.getElementById('reg-name').value : "Геймър";
-            localStorage.setItem('user', name);
-            updateNavWithUser(name);
-            toggleModal('login-modal');
-        }
-
-        function logout() {
-            localStorage.removeItem('user');
-            location.reload();
-        }
-
-        function updateNavWithUser(name) {
-            document.getElementById('user-section').innerHTML = `
-                <div class="flex items-center space-x-2">
-                    <span class="text-purple-400 font-bold">👋 ${name}</span>
-                    <button onclick="logout()" class="text-xs text-red-500 hover:underline">Изход</button>
-                </div>
-            `;
-        }
 
         function renderProducts(list) {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = list.map(p => `
-                <div class="bg-gray-800 border border-gray-700 p-5 rounded-2xl hover:border-purple-500 transition group">
-                    <img src="${p.img}" class="w-full h-48 object-cover rounded-xl mb-4 group-hover:scale-105 transition">
-                    <h3 class="text-xl font-bold">${p.name}</h3>
-                    <p class="text-gray-400 text-sm mb-4 italic">${p.spec}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-black">${p.price} лв.</span>
-                        <button onclick="addToCart(${p.id})" class="bg-gray-700 hover:bg-purple-600 text-white px-4 py-2 rounded-lg transition">Добави</button>
+                <div class="gaming-card p-5 rounded-3xl group cursor-pointer" onclick="showProductDetails(${p.id})">
+                    <div class="overflow-hidden rounded-2xl mb-4 h-64 relative">
+                        <img src="${p.img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute top-2 right-2 bg-black/60 px-3 py-1 rounded-full text-xs font-bold text-blue-400">
+                            ${p.category}
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-black group-hover:text-purple-400 transition mb-1 uppercase tracking-tighter">${p.name}</h3>
+                    <p class="text-gray-400 text-xs mb-4 italic">${p.spec}</p>
+                    <div class="flex justify-between items-center border-t border-gray-700 pt-4">
+                        <span class="text-2xl font-black text-white">${p.price.toLocaleString()} лв.</span>
+                        <button onclick="event.stopPropagation(); addToCart(${p.id})" class="bg-blue-600 hover:bg-purple-600 text-white w-10 h-10 rounded-xl flex items-center justify-center transition shadow-lg">
+                            +
+                        </button>
                     </div>
                 </div>
             `).join('');
         }
 
+        function showProductDetails(id) {
+            const p = products.find(prod => prod.id === id);
+            document.getElementById('detail-img').src = p.img;
+            document.getElementById('detail-name').innerText = p.name;
+            document.getElementById('detail-category').innerText = p.category;
+            document.getElementById('detail-price').innerText = p.price.toLocaleString() + " лв.";
+            document.getElementById('detail-description').innerText = p.description;
+            document.getElementById('detail-specs-list').innerHTML = p.fullSpecs.map(s => `<li>• ${s}</li>`).join('');
+            document.getElementById('add-to-cart-detail').onclick = () => addToCart(p.id);
+            showPage('product-details');
+        }
+
         function filterCategory(cat) {
-            renderProducts(products.filter(p => p.category === cat));
+            const filtered = products.filter(p => p.category === cat);
+            const names = { 'Budget': 'Бюджетни Машини', 'Mid-Range': 'Балансирана Мощ', 'High-End': 'Върхова Производителност' };
+            document.getElementById('category-title').innerText = names[cat] || "Всички Машини";
+            renderProducts(filtered);
             showPage('home');
         }
 
         function addToCart(id) {
-            cart.push(products.find(p => p.id === id));
+            const product = products.find(p => p.id === id);
+            cart.push(product);
             updateCartUI();
+            const btn = document.querySelector('button[onclick*="showPage(\'cart\')"]');
+            btn.classList.add('scale-110', 'bg-purple-600');
+            setTimeout(() => btn.classList.remove('scale-110', 'bg-purple-600'), 200);
         }
 
         function updateCartUI() {
             document.getElementById('cart-count').innerText = cart.length;
-            const cartItems = document.getElementById('cart-items');
+            const container = document.getElementById('cart-items');
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            cartItems.innerHTML = cart.length === 0 ? "Количката е празна." : 
-                cart.map(item => `<div class="flex justify-between py-2 border-b border-gray-700"><span>${item.name}</span><b>${item.price} лв.</b></div>`).join('');
+            
+            if (cart.length === 0) {
+                container.innerHTML = "<p class='text-gray-500 text-center py-10'>Арсеналът е празен.</p>";
+            } else {
+                container.innerHTML = cart.map((item, index) => `
+                    <div class="flex justify-between items-center py-4 border-b border-gray-700 last:border-0">
+                        <div class="flex items-center space-x-4">
+                            <img src="${item.img}" class="w-16 h-16 rounded-lg object-cover border border-gray-600">
+                            <div>
+                                <p class="font-bold text-sm md:text-base">${item.name}</p>
+                                <p class="text-[10px] text-gray-400 uppercase">${item.category}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold text-blue-400">${item.price} лв.</p>
+                            <button onclick="removeFromCart(${index})" class="text-[10px] text-red-500 hover:underline uppercase font-bold">Изтрий</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
             document.getElementById('cart-total').innerText = total.toLocaleString();
         }
 
-        function showPage(pageId) {
-            ['home-page', 'cart-page', 'checkout-page'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById(pageId + '-page').classList.remove('hidden');
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
         }
 
+        function showPage(pageId) {
+            ['home-page', 'cart-page', 'checkout-page', 'product-details-page'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        // AUTH LOGIC
+        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+        function toggleAuthForm() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('register-form').classList.toggle('hidden');
+        }
+        function login(type = 'login') {
+            const nameInput = document.getElementById('reg-name').value;
+            const name = (type === 'reg' && nameInput) ? nameInput : "Player One";
+            localStorage.setItem('user', name);
+            updateNavWithUser(name);
+            toggleModal('login-modal');
+        }
+        function logout() {
+            localStorage.removeItem('user');
+            location.reload();
+        }
+        function updateNavWithUser(name) {
+            document.getElementById('user-section').innerHTML = `
+                <div class="flex items-center space-x-3 bg-gray-900/60 px-4 py-2 rounded-full border border-gray-700 shadow-inner">
+                    <span class="text-blue-400 font-bold text-xs">● ${name}</span>
+                    <button onclick="logout()" class="text-[9px] text-gray-500 hover:text-red-500 uppercase font-black tracking-widest transition">Изход</button>
+                </div>
+            `;
+        }
+
+        // Инициализация на първоначалния изглед
         renderProducts(products);
     </script>
 </body>
